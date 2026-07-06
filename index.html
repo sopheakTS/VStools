@@ -81,16 +81,16 @@
     <!-- MAIN APP STRUCTURE -->
     <div class="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full">
         
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR ( w-[110px] លើទូរស័ព្ទ និង w-64 លើកុំព្យូទ័រ) -->
         <aside id="category-bar" class="w-[110px] md:w-64 bg-gray-100/30 border-r border-gray-200/80 overflow-y-auto p-2 md:p-3.5 shrink-0">
             <div class="text-[9px] md:text-[10px] font-bold text-gray-400 mb-3 px-1 md:px-2 uppercase tracking-widest border-b pb-1.5">ប្រភេទ 类别</div>
             <div id="category-list" class="space-y-1 md:space-y-1.5">
                 <!-- dynamic categories -->
             </div>
         </aside>
-        <!-- PRODUCTS GRID -->
-        <main id="app-container" class="flex-1 overflow-y-auto p-3.5 md:p-4 space-y-8 bg-gray-50">
-            <!-- Dynamic products go here -->
+        <!-- PRODUCTS GRID (លើទូរស័ព្ទបង្ហាញ ២ ជួរ grid-cols-2 រៀបចំតម្លៃ និង QR បញ្ឈរឱ្យស្អាតទូលាយ) -->
+        <main id="app-container" class="flex-1 overflow-y-auto p-2 md:p-4 space-y-8 bg-gray-50">
+            <!-- Dynamic products grouped by category go here -->
         </main>
         
     </div>
@@ -208,7 +208,7 @@
                 renderProductList(allData);
             } catch (e) {
                 console.error("កំហុសក្នុងការអានទិន្នន័យ:", e);
-                document.getElementById('app-container').innerHTML = '<div class="col-span-full text-center text-red-500 p-4">មិនអាចផ្ទុកទិន្នន័យបាន。</div>';
+                document.getElementById('app-container').innerHTML = '<div class="col-span-full text-center text-red-500 p-4">មិនអាចផ្ទុកទិន្នន័យបាន។</div>';
             }
         }
         function renderCategories() {
@@ -283,15 +283,15 @@
                     <div class="border-l-4 border-red-500 pl-2 py-0.5 mb-3">
                         <h2 class="text-sm md:text-base font-bold text-gray-800">${cat}</h2>
                     </div>
-                    <!-- Product Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+                    <!-- Product Grid (លើទូរស័ព្ទ grid-cols-2 គម្លាត gap-2 លើកុំព្យូទ័រ grid-cols-3 ឬ grid-cols-4) -->
+                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-3.5">
                         ${sectionItems.map(item => {
                             const index = allData.indexOf(item);
                             const isNew = item.newStock === '1';
                             const isNewPrice = item.priceUpdate === '1';
                             const isOutOfStock = !item.inStock;
                             return `
-                            <div class="product-card bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md ${isOutOfStock ? 'opacity-65 grayscale' : ''}">
+                            <div class="product-card bg-white p-2 md:p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md ${isOutOfStock ? 'opacity-65 grayscale' : ''}">
                                 
                                 <!-- Product Image Container -->
                                 <div class="relative aspect-square w-full rounded-xl overflow-hidden bg-gray-50 border border-gray-50/50 mb-2 group">
@@ -310,28 +310,28 @@
                                 <!-- Product Info -->
                                 <div class="flex-1 flex flex-col justify-between">
                                     <div>
-                                        <h3 class="font-bold text-gray-900 text-xs sm:text-xs md:text-sm line-clamp-2 leading-snug h-8 sm:h-9 md:h-10 mb-0.5">${item.name}</h3>
-                                        <p class="text-[9px] sm:text-[10px] text-gray-400 font-medium truncate mb-1.5">${item.variant || '-'}</p>
+                                        <h3 class="font-bold text-gray-900 text-[10px] sm:text-xs md:text-sm line-clamp-2 leading-snug h-8 sm:h-9 md:h-10 mb-0.5">${item.name}</h3>
+                                        <p class="text-[9px] sm:text-[10px] md:text-xs text-gray-400 font-medium truncate mb-1">${item.variant || '-'}</p>
                                     </div>
                                     
                                     <div class="flex items-center gap-1.5 mb-2.5 flex-wrap">
-                                        <span class="text-[9px] sm:text-[10px] font-bold text-orange-600 bg-orange-50 border border-orange-100/50 px-1.5 py-0.5 rounded-md">ID: ${item.code}</span>
+                                        <span class="text-[8px] sm:text-[9px] font-bold text-orange-600 bg-orange-50 border border-orange-100/50 px-1.5 py-0.5 rounded-md">ID: ${item.code}</span>
                                     </div>
                                 </div>
-                                <!-- Prices & QR Code (Footer of Card) -->
-                                <div class="border-t border-gray-100 pt-2 flex items-center justify-between gap-1 mt-auto">
-                                    <div class="flex flex-col gap-0.5 min-w-[70%]">
+                                <!-- Prices & QR Code (រៀបចំបញ្ឈរលើទូរស័ព្ទ ផ្តេកលើកុំព្យូទ័រ ដើម្បីកុំឱ្យចង្អៀត) -->
+                                <div class="border-t border-gray-100 pt-2 flex flex-col md:flex-row md:items-center md:justify-between gap-2 mt-auto text-center md:text-left">
+                                    <div class="flex flex-col gap-0.5">
                                         <div class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 font-medium">
-                                            លក់រាយ 零售: <span class="text-red-600 font-bold text-xs sm:text-sm block sm:inline">${item.salePrice}</span>
+                                            លក់រាយ 零售: <span class="text-red-600 font-bold text-[10px] sm:text-xs md:text-sm block sm:inline">${item.salePrice}</span>
                                         </div>
                                         <div class="text-[9px] sm:text-[10px] md:text-xs text-gray-500 font-medium">
-                                            VIP 价格: <span class="text-gray-900 font-bold text-[10px] sm:text-xs block sm:inline">${item.vipPrice}</span>
+                                            VIP 价格: <span class="text-gray-900 font-bold text-[9px] sm:text-xs block sm:inline">${item.vipPrice}</span>
                                         </div>
                                     </div>
                                     
                                     <!-- QR Code Container -->
                                     ${item.qrLink ? 
-                                        `<div class="shrink-0 p-0.5 border border-gray-100 rounded-lg bg-white shadow-sm flex items-center justify-center" id="qrcode-${index}"></div>` : 
+                                        `<div class="shrink-0 mx-auto md:mx-0 p-0.5 border border-gray-100 rounded-lg bg-white shadow-sm flex items-center justify-center" id="qrcode-${index}"></div>` : 
                                         ''
                                     }
                                 </div>
