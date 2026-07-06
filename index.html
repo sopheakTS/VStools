@@ -14,7 +14,6 @@
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <style>
         body { 
             font-family: 'Kantumruy Pro', 'Noto Sans SC', sans-serif; 
@@ -22,19 +21,23 @@
             -webkit-tap-highlight-color: transparent;
             scroll-behavior: smooth;
         }
-
         /* បង្ខំឱ្យប្រអប់ជ្រើសរើស និង Option ទាំងអស់ប្រើប្រាស់ Font Kantumruy Pro */
         select, option, input, button {
             font-family: 'Kantumruy Pro', 'Noto Sans SC', sans-serif !important;
         }
-
+        /* ស្ទីលសម្រាប់ប៊ូតុងប្រភេទផលិតផលនៅលើកុំព្យូទ័រ */
         .category-item.active { 
             background-color: #111827 !important; 
             color: white !important; 
             border-color: #111827 !important;
             box-shadow: 0 4px 6px -1px rgba(17, 24, 39, 0.2); 
         }
-
+        /* ស្ទីលសម្រាប់ប៊ូតុងប្រភេទផលិតផលនៅលើទូរស័ព្ទ */
+        .category-item-mobile.active-mobile {
+            background-color: #111827 !important;
+            color: white !important;
+            border-color: #111827 !important;
+        }
         .product-card { 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
         }
@@ -44,7 +47,25 @@
             border-color: #f97316; 
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
-
+        /* របារអូស Category ឱ្យទន់ល្មើយ និងងាយស្រួលអូសលើទូរស័ព្ទ */
+        .category-scroll-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; 
+        }
+        .category-scroll-container::-webkit-scrollbar {
+            display: none; 
+        }
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
         @keyframes zoomIn {
             from { transform: scale(0.95); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
@@ -53,8 +74,7 @@
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden bg-gray-50">
-
-    <!-- HEADER (កែសម្រួលតាមរូបភាព៖ ពណ៌ខ្មៅងងឹត និងប៊ូតុងតេឡេក្រាម) -->
+    <!-- HEADER (ពណ៌ខ្មៅងងឹត និងប៊ូតុងតេឡេក្រាម) -->
     <header class="bg-gray-900 text-white shadow-lg z-40 shrink-0">
         <div class="flex items-center justify-between px-4 md:px-6 py-3.5 max-w-7xl mx-auto w-full">
             <div class="flex items-center gap-2.5">
@@ -72,10 +92,10 @@
             </button>
         </div>
     </header>
-
-    <!-- SEARCH CONTAINER (កែសម្រួលតាមរូបភាព៖ ស្ថិតនៅក្រោម Header ពណ៌ស) -->
+    <!-- SEARCH & MOBILE CATEGORIES CONTAINER -->
     <div class="bg-gray-50 border-b border-gray-200/50 py-3 px-4 md:px-6 shrink-0">
-        <div class="max-w-7xl mx-auto w-full">
+        <div class="max-w-7xl mx-auto w-full flex flex-col gap-3">
+            <!-- Search Box -->
             <div class="relative group w-full md:max-w-md">
                 <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="search-box" 
@@ -83,27 +103,29 @@
                        class="w-full pl-10 pr-4 py-3 rounded-2xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-400/20 outline-none text-sm font-medium transition-all shadow-sm bg-white"
                        oninput="handleSearch()">
             </div>
+            
+            <!-- Category Mobile List (បង្ហាញតែលើទូរស័ព្ទ/Tablet ទេ - md:hidden) -->
+            <div id="category-list-mobile" class="category-scroll-container pb-1 md:hidden w-full scrollbar-none">
+                <!-- Dynamic categories go here -->
+            </div>
         </div>
     </div>
-
     <!-- MAIN APP STRUCTURE -->
     <div class="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full">
         
-        <!-- SIDEBAR (កែសម្រួលតាមរូបភាព៖ ប្រអប់ពណ៌ស មានរូប Folder ពណ៌លឿង) -->
-        <aside id="category-bar" class="w-5/12 sm:w-1/3 md:w-1/4 bg-gray-100/30 border-r border-gray-200/80 overflow-y-auto p-3.5 shrink-0">
+        <!-- SIDEBAR (បង្ហាញតែលើកុំព្យូទ័រ - hidden md:block) -->
+        <aside id="category-bar" class="hidden md:block md:w-1/4 lg:w-1/5 bg-gray-100/30 border-r border-gray-200/80 overflow-y-auto p-3.5 shrink-0">
             <div class="text-[10px] font-bold text-gray-400 mb-3.5 px-2 uppercase tracking-widest border-b pb-2">ប្រភេទជ្រើសរើស 类别</div>
             <div id="category-list" class="space-y-1.5">
-                <!-- Dynamic categories go here -->
+                <!-- Desktop categories go here -->
             </div>
         </aside>
-
-        <!-- PRODUCTS GRID (កែសម្រួលតាមរូបភាព៖ បែងចែកជាផ្នែកៗ តាមប្រភេទ និងកាតទំនិញស្អាត) -->
+        <!-- PRODUCTS GRID (រីកពេញអេក្រង់ទូរស័ព្ទ) -->
         <main id="app-container" class="flex-1 overflow-y-auto p-4 space-y-8 bg-gray-50">
-            <!-- Dynamic products grouped by category go here -->
+            <!-- Dynamic products go here -->
         </main>
         
     </div>
-
     <!-- TELEGRAM CONTACT MODAL -->
     <div id="contact-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden z-[110] flex items-center justify-center p-4">
         <div class="bg-white/80 backdrop-blur-xl border border-white/30 rounded-3xl w-full max-w-sm p-5 shadow-2xl relative animate-zoom">
@@ -165,18 +187,15 @@
             </div>
         </div>
     </div>
-
     <!-- TOAST -->
     <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-3 z-[110] transform translate-y-20 opacity-0 transition-all duration-300 w-max max-w-[90%]">
         <i class="fa-solid fa-circle-check text-green-400"></i>
         <span id="toast-msg" class="text-sm font-medium">ជោគជ័យ</span>
     </div>
-
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/1iXLoDPlNtwBr-jfIR8Nd73dxarb9kfv5o3r3MCRCqIo/gviz/tq?tqx=out:csv';
         let allData = [];
         let currentCategory = 'ទាំងអស់ 全部';
-
         // មុខងារកែតម្រូវតំណភ្ជាប់រូបភាព Google Drive ឱ្យបង្ហាញផ្ទាល់
         function formatImageUrl(url) {
             if (!url) return '';
@@ -195,7 +214,6 @@
             }
             return cleanUrl;
         }
-
         async function fetchSheetData() {
             try {
                 const response = await fetch(CSV_URL);
@@ -225,32 +243,60 @@
                 document.getElementById('app-container').innerHTML = '<div class="col-span-full text-center text-red-500 p-4">មិនអាចផ្ទុកទិន្នន័យបាន។</div>';
             }
         }
-
         function renderCategories() {
             const uniqueCats = [...new Set(allData.map(i => i.category))];
             const categories = ['ទាំងអស់ 全部', 'ទំនិញថ្មី 新货', ...uniqueCats];
-            document.getElementById('category-list').innerHTML = categories.map(cat => {
-                const isActive = cat === currentCategory;
-                return `
-                <button onclick="filter('${cat}', this)" class="category-item w-full text-left px-3 py-2.5 text-xs md:text-sm rounded-xl font-semibold text-gray-700 mb-1.5 transition-all flex items-center border border-gray-100 bg-white hover:bg-gray-50 shadow-sm ${isActive ? 'active' : ''}" data-cat="${cat}">
-                    <i class="fa-solid fa-folder text-amber-400 mr-2 text-sm shrink-0"></i>
-                    <span class="truncate">${cat}</span>
-                </button>
-                `;
-            }).join('');
+            
+            const catListDesktop = document.getElementById('category-list');
+            const catListMobile = document.getElementById('category-list-mobile');
+            // បង្កើតបញ្ជី Category សម្រាប់កុំព្យូទ័រ (Sidebar)
+            if (catListDesktop) {
+                catListDesktop.innerHTML = categories.map(cat => {
+                    const isActive = cat === currentCategory;
+                    return `
+                    <button onclick="filter('${cat}', this)" class="category-item w-full text-left px-3 py-2.5 text-xs md:text-sm rounded-xl font-semibold text-gray-700 mb-1.5 transition-all flex items-center border border-gray-100 bg-white hover:bg-gray-50 shadow-sm ${isActive ? 'active' : ''}" data-cat="${cat}">
+                        <i class="fa-solid fa-folder text-amber-400 mr-2 text-sm shrink-0"></i>
+                        <span class="truncate">${cat}</span>
+                    </button>
+                    `;
+                }).join('');
+            }
+            // បង្កើតបញ្ជី Category សម្រាប់ទូរស័ព្ទ (Pills អូសផ្តេក)
+            if (catListMobile) {
+                catListMobile.innerHTML = categories.map(cat => {
+                    const isActive = cat === currentCategory;
+                    return `
+                    <button onclick="filter('${cat}', this)" class="category-item-mobile px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shadow-sm border border-gray-200/50 bg-white text-gray-600 transition-all ${isActive ? 'active-mobile bg-gray-900 text-white border-transparent' : ''}" data-cat="${cat}">
+                        <span class="flex items-center gap-1">📁 ${cat}</span>
+                    </button>
+                    `;
+                }).join('');
+            }
         }
-
         function filter(cat, btn) {
             currentCategory = cat;
+            
+            // ធ្វើបច្ចុប្បន្នភាពប៊ូតុងសកម្មនៅលើ Desktop Sidebar
             document.querySelectorAll('.category-item').forEach(el => {
                 el.classList.remove('active');
                 el.className = "category-item w-full text-left px-3 py-2.5 text-xs md:text-sm rounded-xl font-semibold text-gray-700 mb-1.5 transition-all flex items-center border border-gray-100 bg-white hover:bg-gray-50 shadow-sm";
+                if (el.getAttribute('data-cat') === cat) {
+                    el.classList.add('active');
+                    el.className = "category-item active w-full text-left px-3 py-2.5 text-xs md:text-sm rounded-xl font-semibold text-white mb-1.5 transition-all flex items-center border border-transparent shadow-sm";
+                }
             });
-            btn.classList.add('active');
-            btn.className = "category-item active w-full text-left px-3 py-2.5 text-xs md:text-sm rounded-xl font-semibold text-white mb-1.5 transition-all flex items-center border border-transparent shadow-sm";
+            // ធ្វើបច្ចុប្បន្នភាពប៊ូតុងសកម្មនៅលើទូរស័ព្ទ (Pills)
+            document.querySelectorAll('.category-item-mobile').forEach(el => {
+                el.classList.remove('active-mobile');
+                el.className = "category-item-mobile px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shadow-sm border border-gray-200/50 bg-white text-gray-600 transition-all";
+                if (el.getAttribute('data-cat') === cat) {
+                    el.classList.add('active-mobile');
+                    el.className = "category-item-mobile active-mobile px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shadow-sm border border-transparent bg-gray-900 text-white transition-all";
+                    el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
             handleSearch();
         }
-
         function handleSearch() {
             const searchTerm = document.getElementById('search-box').value.toLowerCase().trim();
             const filtered = allData.filter(item => {
@@ -262,11 +308,9 @@
             });
             renderProductList(filtered);
         }
-
         function renderProductList(items) {
             const container = document.getElementById('app-container');
             container.innerHTML = '';
-
             // បែងចែកទំនិញជាក្រុមតាមប្រភេទផលិតផល (Category) ដើម្បីបង្ហាញចំណងជើងផ្នែក (Section Header) ដូចរូបភាព
             const groups = {};
             items.forEach(item => {
@@ -276,7 +320,6 @@
                 }
                 groups[cat].push(item);
             });
-
             const categories = Object.keys(groups);
             if (categories.length === 0) {
                 container.innerHTML = `
@@ -286,7 +329,6 @@
                 </div>`;
                 return;
             }
-
             categories.forEach(cat => {
                 const sectionItems = groups[cat];
                 const sectionDiv = document.createElement('div');
@@ -304,7 +346,6 @@
                             const isNew = item.newStock === '1';
                             const isNewPrice = item.priceUpdate === '1';
                             const isOutOfStock = !item.inStock;
-
                             return `
                             <div class="product-card bg-white p-2.5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md ${isOutOfStock ? 'opacity-65 grayscale' : ''}">
                                 
@@ -322,7 +363,6 @@
                                         ${isOutOfStock ? '<span class="text-[8px] md:text-[9px] font-extrabold text-white bg-gray-600 px-1.5 py-0.5 rounded-lg shadow-sm">没货 OUT</span>' : ''}
                                     </div>
                                 </div>
-
                                 <!-- Product Info -->
                                 <div class="flex-1 flex flex-col justify-between">
                                     <div>
@@ -334,7 +374,6 @@
                                         <span class="text-[9px] sm:text-[10px] font-bold text-orange-600 bg-orange-50 border border-orange-100/50 px-1.5 py-0.5 rounded-md">ID: ${item.code}</span>
                                     </div>
                                 </div>
-
                                 <!-- Prices & QR Code (Footer of Card) -->
                                 <div class="border-t border-gray-100 pt-2 flex items-center justify-between gap-1 mt-auto">
                                     <div class="flex flex-col gap-0.5 min-w-[70%]">
@@ -359,7 +398,6 @@
                 `;
                 container.appendChild(sectionDiv);
             });
-
             // បង្កើត QR code បន្ទាប់ពី Render HTML រួច
             items.forEach((item) => {
                 const index = allData.indexOf(item);
@@ -372,27 +410,23 @@
                 }
             });
         }
-
         /* មុខងារគ្រប់គ្រង CONTACT MODAL */
         function openContactModal() {
             const modal = document.getElementById('contact-modal');
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
-
         function closeContactModal() {
             const modal = document.getElementById('contact-modal');
             modal.classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
-
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = message;
             toast.classList.remove('translate-y-20', 'opacity-0');
             setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2500);
         }
-
         window.onload = fetchSheetData;
     </script>
 </body>
